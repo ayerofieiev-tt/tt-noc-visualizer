@@ -557,15 +557,15 @@
             <button class="animate-btn" id="animate-btn" onclick="toggleAnimation()">▶ Animate</button>
         </div>
         
-        <div class="section-title">Presets</div>
+        <div class="section-title">Examples</div>
         <div class="preset-btns">
             <button class="preset-btn" onclick="loadPreset('dual-mcast')">Dual Mcast</button>
             <button class="preset-btn" onclick="loadPreset('bidirectional')">Bidirect</button>
             <button class="preset-btn" onclick="loadPreset('pipeline')">Pipeline</button>
         </div>
         <div class="preset-btns" style="margin-top:5px;">
-            <button class="preset-btn" onclick="loadPreset('dram-bad')">Naive DRAM</button>
-            <button class="preset-btn" onclick="loadPreset('dram-good')">Optimal DRAM</button>
+            <button class="preset-btn" onclick="loadPreset('dram-bad')">DRAM (1 noc)</button>
+            <button class="preset-btn" onclick="loadPreset('dram-good')">DRAM (2 nocs)</button>
         </div>
         <div class="preset-info" id="preset-info" style="display:none;"></div>
     </div>
@@ -1238,6 +1238,10 @@
                 
                 pendingSource = null;
                 
+                // Clear hover state
+                hoveredPathNoc = null;
+                hoveredPathIdx = null;
+                
                 updateStatus();
                 updateCommLists();
                 updateStats();
@@ -1263,6 +1267,11 @@
             } else {
                 noc1Paths.splice(idx, 1);
             }
+            
+            // Clear hover state
+            hoveredPathNoc = null;
+            hoveredPathIdx = null;
+            
             updateCommLists();
             updateStats();
             highlightNodes();
@@ -1284,6 +1293,10 @@
                 noc0Paths.push(path);
             }
             
+            // Clear hover state
+            hoveredPathNoc = null;
+            hoveredPathIdx = null;
+            
             updateCommLists();
             updateStats();
             highlightNodes();
@@ -1301,6 +1314,11 @@
             } else {
                 noc1Paths = [];
             }
+            
+            // Clear hover state
+            hoveredPathNoc = null;
+            hoveredPathIdx = null;
+            
             updateCommLists();
             updateStats();
             highlightNodes();
@@ -1316,6 +1334,10 @@
             noc0Paths = [];
             noc1Paths = [];
             pendingSource = null;
+            
+            // Clear hover state
+            hoveredPathNoc = null;
+            hoveredPathIdx = null;
             
             updateStatus();
             updateCommLists();
@@ -1430,7 +1452,7 @@
                     });
                     
                     infoPanel.innerHTML = `
-                        <strong>Naive Interleaved DRAM</strong><br><br>
+                        <strong>DRAM Interleaved (1 NOC)</strong><br><br>
                         <code>bank = core_idx % 6</code><br>
                         <span class="noc0-text">All ${allCores.length} cores read via NOC0 only</span><br><br>
                         <strong>Problems:</strong><br>
@@ -1524,7 +1546,7 @@
                     });
                     
                     infoPanel.innerHTML = `
-                        <strong>Optimal Interleaved DRAM</strong><br><br>
+                        <strong>DRAM Interleaved (2 NOCs)</strong><br><br>
                         <strong>Left DRAM (x=0):</strong><br>
                         <span class="noc0-text">NOC0 →</span> cores x=1,2 (1-2 hops)<br>
                         <span class="noc1-text">NOC1 →</span> cores x=8,9 (1-2 hops via wrap!)<br><br>
